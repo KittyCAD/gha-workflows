@@ -1,0 +1,33 @@
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch: {}
+
+name: Semgrep scan
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    # Skip any PR created by dependabot to avoid permission issues:
+    if: github.event.pull_request.merged == true && (github.actor != 'dependabot[bot]')
+    name: semgrep-oss/scan
+    runs-on: ubuntu-latest
+
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+         git clone https://github.com/trailofbits/semgrep-rules $HOME/semgrep-rules-tob
+         git clone https://github.com/semgrep/semgrep-rules $HOME/semgrep-rules
+         rm $HOME/semgrep-rules-tob/.github/workflows/update-semgrep-registry.yml
+         rm $HOME/semgrep-rules/.pre-commit-config.yaml
+         rm -rf $HOME/semgrep-rules-tob/.github
+         rm -rf $HOME/semgrep-rules/.github
+         rm -rf $HOME/semgrep-rules/stats
+      - run: git config --global --add safe.directory /__w/ciso/ciso
+      - run: semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob --metrics=off --experimental || true
