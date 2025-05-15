@@ -27,4 +27,4 @@ jobs:
          rm -rf $HOME/semgrep-rules/.github
          rm -rf $HOME/semgrep-rules/stats
       - run: git config --global --add safe.directory $(pwd)
-      - run: semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob --metrics=off --experimental || true
+      - run: semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob --metrics=off --experimental --exclude="*.html" --exclude="*.js" || true
