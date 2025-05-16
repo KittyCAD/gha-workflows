@@ -3,16 +3,18 @@ on:
 
 name: Semgrep scan
 
-permissions:
-  contents: read
-
 jobs:
   semgrep:
     # Skip any PR created by dependabot to avoid permission issues:
     if: (github.actor != 'dependabot[bot]')
     name: semgrep-oss/scan
     runs-on: ubuntu-latest
-
+    permissions:
+      # required for all workflows
+      security-events: write
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
     container:
       image: semgrep/semgrep
 
