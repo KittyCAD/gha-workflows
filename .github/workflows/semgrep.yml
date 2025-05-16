@@ -34,11 +34,11 @@ jobs:
       - run: |
           semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
             --metrics=off --experimental \
-            --exclude-rule=yaml.github-actions.security.third-party-action-not-pinned-to-commit-sha.third-party-action-not-pinned-to-commit-sha \
-            --exclude-rule=ai.generic.detect-generic-ai-anthprop.detect-generic-ai-anthprop \
-            --exclude-rule=ai.generic.detect-generic-ai-api.detect-generic-ai-api \
-            --exclude-rule=ai.generic.detect-generic-ai-gem.detect-generic-ai-gem \
-            --exclude-rule=ai.generic.detect-generic-ai-oai.detect-generic-ai-oai \
+            --exclude-rule=third-party-action-not-pinned-to-commit-sha \
+            --exclude-rule=detect-generic-ai-anthprop \
+            --exclude-rule=detect-generic-ai-api \
+            --exclude-rule=detect-generic-ai-gem \
+            --exclude-rule=detect-generic-ai-oai \
             --exclude="*.html" --exclude="*.js" \
             --json > /tmp/semgrep-results.json || true
       - name: Notice
