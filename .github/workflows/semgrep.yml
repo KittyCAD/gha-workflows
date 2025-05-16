@@ -39,12 +39,14 @@ jobs:
             --exclude-rule=ai.generic.detect-generic-ai-gem.detect-generic-ai-gem \
             --exclude-rule=ai.generic.detect-generic-ai-oai.detect-generic-ai-oai \
             --exclude="*.html" --exclude="*.js" \
-            --sarif > /tmp/semgrep-results.sarif || true
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: /tmp/semgrep-results.sarif
-        if: always()
+            --json > /tmp/semgrep-results.json || true
+      - run: |
+          cat /tmp/semgrep-results.json | jq -r '.results[] | . + { severity: (if .extra.severity == "WARNING" then "warning" elif .extra.severity == "ERROR" then "error" else "notice" end) } | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\(.extra.message)"'
+  #    - name: Upload SARIF file
+  #      uses: github/codeql-action/upload-sarif@v2
+  #      with:
+  #        # Path to SARIF file relative to the root of the repository
+  #        sarif_file: /tmp/semgrep-results.sarif
+  #      if: always()
 
 
