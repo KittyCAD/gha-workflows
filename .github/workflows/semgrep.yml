@@ -18,10 +18,11 @@ jobs:
       image: semgrep/semgrep
 
     steps:
-      - run: ls -lah /usr/bin/
       - run: /usr/bin/jq --version
-      - run: |
-          echo "" | /usr/bin/jq -r '.results[] | . + { severity: (if .extra.severity == "WARNING" then "warning" elif .extra.severity == "ERROR" then "error" else "notice" end) } | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\(.extra.message)"'
+      - name: Notice
+        shell: bash
+        run: |
+          /usr/bin/jq -r empty.file '.results[] | . + { severity: (if .extra.severity == "WARNING" then "warning" elif .extra.severity == "ERROR" then "error" else "notice" end) } | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\(.extra.message)"'
       - uses: actions/checkout@v3
       - run: |
          git clone https://github.com/trailofbits/semgrep-rules $HOME/semgrep-rules-tob
