@@ -44,7 +44,7 @@ jobs:
       - name: Notice
         shell: bash
         run: |
-          /usr/bin/jq '.results[]
+          /usr/bin/jq -r '.results[]
             | . + {
                 severity: (
                   if .extra.severity == "WARNING" then "warning"
