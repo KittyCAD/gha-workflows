@@ -40,6 +40,7 @@ jobs:
             --exclude-rule=detect-generic-ai-gem \
             --exclude-rule=detect-generic-ai-oai \
             --exclude="*.html" --exclude="*.js" \
+            --baseline-commit=${{ github.event.pull_request.base.sha }} \
             --json > /tmp/semgrep-results.json || true
       - name: Notice
         shell: bash
