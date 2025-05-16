@@ -13,6 +13,7 @@ jobs:
       pull-requests: read
       checks: write
       contents: read
+      actions: write
     container:
       image: semgrep/semgrep
 
