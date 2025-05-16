@@ -38,18 +38,12 @@ jobs:
             --exclude-rule=ai.generic.detect-generic-ai-gem.detect-generic-ai-gem \
             --exclude-rule=ai.generic.detect-generic-ai-oai.detect-generic-ai-oai \
             --exclude="*.html" --exclude="*.js" \
-            --sarif --sarif-output=semgrep-results.sarif || true
-      - name: Save SARIF results as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: semgrep-scan-results
-          path: semgrep-results.sarif
-        if: always()
+            --sarif > /tmp/semgrep-results.sarif || true
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
           # Path to SARIF file relative to the root of the repository
-          sarif_file: semgrep-results.sarif
+          sarif_file: /tmp/semgrep-results.sarif
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: semgrep
