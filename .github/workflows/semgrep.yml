@@ -33,7 +33,6 @@ jobs:
          rm -rf $HOME/semgrep-rules/.github
          rm -rf $HOME/semgrep-rules/stats
       - run: git config --global --add safe.directory $(pwd)
-      - run: git diff --cached --name-status --no-ext-diff -z --diff-filter=ACDMRTUXB --ignore-submodules --relative 9cd38401370f5bbda1be28de4ac40882187c72d9
       - run: |
           semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
             --metrics=off --experimental \
