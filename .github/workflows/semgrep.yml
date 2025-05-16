@@ -40,13 +40,19 @@ jobs:
             --exclude="*.html" --exclude="*.js" \
             --sarif --sarif-output=semgrep-results.sarif || true
       - name: Save SARIF results as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: semgrep-scan-results
           path: semgrep-results.sarif
-
-      - name: Upload SARIF result to the GitHub Security Dashboard
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: semgrep-results.sarif
         if: always()
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: semgrep-results.sarif
+          # Optional category for the results
+          # Used to differentiate multiple results for one commit
+          category: semgrep
+        if: always()
+
+
