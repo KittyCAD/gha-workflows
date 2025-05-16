@@ -44,7 +44,18 @@ jobs:
       - name: Notice
         shell: bash
         run: |
-          /usr/bin/jq -r '.results[] | . + { severity: (if .extra.severity == "WARNING" then "warning" elif .extra.severity == "ERROR" then "error" else "notice" end) } | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\(.extra.message)"' /tmp/semgrep-results.json
+          /usr/bin/jq '.results[]
+            | . + {
+                severity: (
+                  if .extra.severity == "WARNING" then "warning"
+                  elif .extra.severity == "ERROR" then "error"
+                  else "notice"
+                  end
+                )
+              }
+            | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\((.extra.message
+                | gsub("[^a-zA-Z0-9 .]"; "")
+            ))"' /tmp/semgrep-results.json
   #    - name: Upload SARIF file
   #      uses: github/codeql-action/upload-sarif@v2
   #      with:
