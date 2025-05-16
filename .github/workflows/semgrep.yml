@@ -20,6 +20,8 @@ jobs:
     steps:
       - run: /usr/bin/jq --version
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - run: |
          git clone https://github.com/trailofbits/semgrep-rules $HOME/semgrep-rules-tob
          git clone https://github.com/semgrep/semgrep-rules $HOME/semgrep-rules
