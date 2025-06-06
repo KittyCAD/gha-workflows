@@ -37,10 +37,8 @@ jobs:
           semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
             --metrics=off --experimental \
             --exclude-rule=third-party-action-not-pinned-to-commit-sha \
-            --exclude-rule=detect-generic-ai-anthprop \
-            --exclude-rule=detect-generic-ai-api \
-            --exclude-rule=detect-generic-ai-gem \
-            --exclude-rule=detect-generic-ai-oai \
+            --severity=WARNING \
+            --severity=ERROR \
             --exclude="*.html" --exclude="*.js" \
             --baseline-commit=${{ github.event.pull_request.base.sha }} \
             --json > /tmp/semgrep-results.json || true
