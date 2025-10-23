@@ -1,0 +1,31 @@
+on:
+  pull_request:
+
+name: Dependency Track
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+
+    container:
+      image: aquasec/trivy:0.67.2
+
+    steps:
+      - run: trivy --version
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: trivy fs --format cyclonedx --output /tmp/trivy-cyclonedx.json .
+      - run: |
+          IS_LATEST=false
+          if [ "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
+            IS_LATEST=true
+          fi
+          curl -X "POST" "https://dependency-track.hawk-dinosaur.ts.net/api/v1/bom" \
+               -H 'Content-Type: multipart/form-data' \
+                -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_AUTOMATION_API_KEY }}" \
+               -F "autoCreate=true" \
+               -F "projectName=${{ github.repository }}" \
+               -F "projectVersion=${{ github.ref_name }}" \
+               -F "isLatest=$IS_LATEST" \
+               -F "bom=@/tmp/trivy-cyclonedx.json"
