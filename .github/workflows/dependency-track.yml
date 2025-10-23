@@ -16,6 +16,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: trivy fs --format cyclonedx --output /tmp/trivy-cyclonedx.json .
+      - run: apk --no-cache add curl
       - run: |
           IS_LATEST=false
           if [ "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
