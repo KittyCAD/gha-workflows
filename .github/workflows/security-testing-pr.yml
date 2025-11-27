@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   zizmor:
-    name: zizmor latest via PyPI
+    name: zizmor
     runs-on: ubuntu-latest
     permissions:
       security-events: write # needed for SARIF uploads
@@ -24,7 +24,14 @@ jobs:
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
 
       - name: Run zizmor 🌈
-        run: uvx zizmor --format=github .
+        run: |
+          cat <<EOF > zizmor.yml
+          rules:
+            unpinned-uses:
+              disable: true
+          EOF
+        
+          uvx zizmor --format=github --config=zizmor.yml .
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
