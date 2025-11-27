@@ -1,4 +1,9 @@
 on:
+  workflow_call:
+    inputs: {}
+    secrets:
+      DEPENDENCY_TRACK_AUTOMATION_API_KEY:
+        required: true
   push:
     branches:
       - main
