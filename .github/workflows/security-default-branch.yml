@@ -5,6 +5,9 @@ on:
 
 name: Security
 
+permissions:
+  contents: read
+
 jobs:
   sbom-trivy:
     runs-on: ubuntu-latest
