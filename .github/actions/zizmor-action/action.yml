@@ -1,5 +1,9 @@
 name: 'Zizmor Scan'
 description: 'Install uv and run zizmor scan with custom config'
+inputs:
+  gh_token:
+    description: 'GitHub token for authentication'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -14,6 +18,5 @@ runs:
         EOF
         uvx zizmor --format=github --config=zizmor.yml .
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ inputs.gh_token }}
       shell: bash
-

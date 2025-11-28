@@ -1,5 +1,9 @@
 name: 'Scorecard Scan'
 description: 'Run OSSF scorecard'
+inputs:
+  gh_token:
+    description: 'GitHub token for authentication'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -10,5 +14,4 @@ runs:
         results_format: sarif
         publish_results: false
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      shell: bash
+        GH_TOKEN: ${{ inputs.gh_token }}

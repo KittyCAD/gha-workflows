@@ -19,5 +19,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/zizmor-action
-        with: {}
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}

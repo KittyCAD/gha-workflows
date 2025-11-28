@@ -1,11 +1,11 @@
 on:
   workflow_call:
-    inputs: {}
+    inputs: { }
     secrets:
       DEPENDENCY_TRACK_AUTOMATION_API_KEY:
         required: true
- #     GH_TOKEN:
- #       required: true
+  #     GH_TOKEN:
+  #       required: true
   push:
     branches:
       - main
@@ -49,6 +49,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   zizmor:
     runs-on: ubuntu-latest
@@ -58,6 +60,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   scorecard:
     runs-on: ubuntu-latest
@@ -67,4 +71,5 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
-
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
