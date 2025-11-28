@@ -15,7 +15,7 @@ runs:
         import requests
         
         def main():
-            base_url = 'https://defectdojo.hawk-dinosaur.ts.net'
+            base_url = 'https://defectdojo-api.corp.zoo.dev'
             dd_token = os.environ['INPUT_DD_TOKEN']
             repo_name = os.environ['GITHUB_REPOSITORY']
             report_path = os.environ['INPUT_REPORT_PATH']
