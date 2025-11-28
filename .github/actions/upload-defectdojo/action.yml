@@ -5,8 +5,6 @@ runs:
   using: 'composite'
   steps:
     - name: Install dependencies
-      run: pip install requests requests-toolbelt
-      shell: bash
     - name: Run upload script inline
       run: |
         python3 <<EOF
@@ -17,7 +15,7 @@ runs:
         def main():
             base_url = 'https://defectdojo-api.corp.zoo.dev'
             dd_token = os.environ['INPUT_DD_TOKEN']
-            repo_name = os.environ['GITHUB_REPOSITORY']
+            repo_name = os.environ['GITHUB_REPOSITORY'].split('/')[-1]
             report_path = os.environ['INPUT_REPORT_PATH']
             scan_type = os.environ['INPUT_SCAN_TYPE']
             engagement = os.environ['INPUT_ENGAGEMENT']
