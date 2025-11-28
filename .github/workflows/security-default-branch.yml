@@ -4,8 +4,8 @@ on:
     secrets:
       DEPENDENCY_TRACK_AUTOMATION_API_KEY:
         required: true
-      GH_TOKEN:
-        required: true
+ #     GH_TOKEN:
+ #       required: true
   push:
     branches:
       - main
