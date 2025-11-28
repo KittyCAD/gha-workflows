@@ -33,6 +33,6 @@ jobs:
                 -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_AUTOMATION_API_KEY }}" \
                -F "autoCreate=true" \
                -F "projectName=${{ github.repository }}" \
-               -F "projectVersion=main" \
+               -F "projectVersion=${{ github.ref_name }}" \
                -F "isLatest=$IS_LATEST" \
                -F "bom=@/tmp/trivy-cyclonedx.json"
