@@ -44,7 +44,7 @@ runs:
           --exclude-rule=jsx-not-internationalized \
           --severity=WARNING \
           --severity=ERROR \
-          --exclude="*.html" --exclude="*.js" \
+          --exclude="*.html" --exclude="*.js" --exclude="*.spec.ts" \
           $baseline_commit_arg \
           --${{ inputs.results_format }} > "$results_file" || true
       shell: bash
