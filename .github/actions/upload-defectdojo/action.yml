@@ -60,6 +60,10 @@ runs:
         EOF
       env:
         GITHUB_REPOSITORY: ${{ github.repository }}
+        INPUT_DD_TOKEN: ${{ inputs.dd_token }}
+        INPUT_REPORT_PATH: ${{ inputs.report_path }}
+        INPUT_SCAN_TYPE: ${{ inputs.scan_type }}
+        INPUT_ENGAGEMENT: ${{ inputs.engagement }}
       shell: bash
 inputs:
   dd_token:
