@@ -83,18 +83,17 @@ jobs:
           engagement: Zizmor
 
   scorecard:
+    if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: main # Scorecard needs to run against default branch
       - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
         id: scorecard
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: git checkout main # Ensure we are on default branch
       - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
