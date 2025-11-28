@@ -34,6 +34,10 @@ runs:
     - name: "Run semgrep"
       run: |
         results_file="/tmp/semgrep-results.${{ inputs.results_format }}"
+        baseline_commit_arg=""
+        if [ "${{ inputs.show_results_in_pr }}" = "true" ]; then
+          baseline_commit_arg="--baseline-commit=${{ github.event.pull_request.base.sha }}"
+        fi
         semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
           --metrics=off --experimental \
           --exclude-rule=third-party-action-not-pinned-to-commit-sha \
@@ -41,7 +45,7 @@ runs:
           --severity=WARNING \
           --severity=ERROR \
           --exclude="*.html" --exclude="*.js" \
-          --baseline-commit=${{ github.event.pull_request.base.sha }} \
+          $baseline_commit_arg \
           --${{ inputs.results_format }} > "$results_file" || true
       shell: bash
     - name: "Set results file path output"
