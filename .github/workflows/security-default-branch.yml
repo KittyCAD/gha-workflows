@@ -37,7 +37,7 @@ jobs:
                -F "autoCreate=true" \
                -F "projectName=$PROJECT_NAME" \
                -F "projectVersion=$PROJECT_VERSION" \
-               -F "isLatest=$IS_LATEST" \
+               -F "isLatest=true" \
                -F "bom=@/tmp/trivy-cyclonedx.json"
         env:
           PROJECT_NAME: ${{ github.repository }}
