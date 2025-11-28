@@ -1,5 +1,18 @@
 name: 'Semgrep Scan'
 description: 'Run Semgrep scan with custom rules and output results'
+inputs:
+  results_format:
+    description: 'Format of the results file (json or sarif)'
+    required: false
+    default: 'json'
+  show_results_in_pr:
+    description: 'Show results in PR (true/false)'
+    required: false
+    default: 'true'
+outputs:
+  results_file_path:
+    description: 'Absolute path to the Semgrep results file'
+    value: ${{ steps.set_results_file_path_output.outputs.results_file_path }}
 runs:
   using: 'composite'
   steps:
@@ -20,6 +33,7 @@ runs:
       shell: bash
     - name: "Run semgrep"
       run: |
+        results_file="/tmp/semgrep-results.${{ inputs.results_format }}"
         semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
           --metrics=off --experimental \
           --exclude-rule=third-party-action-not-pinned-to-commit-sha \
@@ -28,9 +42,14 @@ runs:
           --severity=ERROR \
           --exclude="*.html" --exclude="*.js" \
           --baseline-commit=${{ github.event.pull_request.base.sha }} \
-          --json > /tmp/semgrep-results.json || true
+          --${{ inputs.results_format }} > "$results_file" || true
       shell: bash
-    - name: Show results in PR
+    - name: "Set results file path output"
+      id: set_results_file_path_output
+      run: echo "results_file_path=/tmp/semgrep-results.${{ inputs.results_format }}" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: "Show results in PR"
+      if: ${{ inputs.show_results_in_pr == 'true' && inputs.results_format == 'json' }}
       run: |
         /usr/bin/jq -r '.results[]
           | . + {

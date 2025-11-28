@@ -4,6 +4,10 @@ inputs:
   gh_token:
     description: 'GitHub token for authentication'
     required: true
+outputs:
+  results_file_path:
+    description: 'Absolute path to the SARIF results file'
+    value: ${{ steps.set_sarif_file_path_output.outputs.sarif_file_path }}
 runs:
   using: 'composite'
   steps:
@@ -15,3 +19,7 @@ runs:
         publish_results: false
       env:
         GH_TOKEN: ${{ inputs.gh_token }}
+    - name: "Set SARIF file path output"
+      id: set_sarif_file_path_output
+      run: echo "sarif_file_path=${{ github.workspace }}/results.sarif" >> $GITHUB_OUTPUT
+      shell: bash

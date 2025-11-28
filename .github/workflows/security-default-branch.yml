@@ -4,6 +4,8 @@ on:
     secrets:
       DEPENDENCY_TRACK_AUTOMATION_API_KEY:
         required: true
+      DEFECTDOJO_API_TOKEN:
+        required: true
   #     GH_TOKEN:
   #       required: true
   push:
@@ -49,8 +51,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
+        id: semgrep
         with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          show_results_in_pr: false
+          results_format: json
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+        with:
+          dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
+          report_path: ${{ steps.zizmor.outputs.results_file_path }}
+          scan_type: Semgrep JSON Report
+          engagement: Semgrep
 
   zizmor:
     runs-on: ubuntu-latest
@@ -60,8 +70,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
+        id: zizmor
         with:
+          results_format: sarif
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+        with:
+          dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
+          report_path: ${{ steps.zizmor.outputs.results_file_path }}
+          scan_type: SARIF
+          engagement: Zizmor
 
   scorecard:
     runs-on: ubuntu-latest
@@ -70,6 +88,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          ref: main # Scorecard needs to run against default branch
       - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
+        id: scorecard
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+        with:
+          dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
+          report_path: ${{ steps.zizmor.outputs.results_file_path }}
+          scan_type: SARIF
+          engagement: Scorecard

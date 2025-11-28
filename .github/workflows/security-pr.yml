@@ -26,5 +26,3 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}

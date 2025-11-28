@@ -4,6 +4,14 @@ inputs:
   gh_token:
     description: 'GitHub token for authentication'
     required: true
+  results_format:
+    description: 'Format of the results file (github, json, sarif)'
+    required: false
+    default: 'github'
+outputs:
+  results_file_path:
+    description: 'Absolute path to the Zizmor results file'
+    value: ${{ steps.set_results_file_path_output.outputs.results_file_path }}
 runs:
   using: 'composite'
   steps:
@@ -16,7 +24,12 @@ runs:
           unpinned-uses:
             disable: true
         EOF
-        uvx zizmor --format=github --config=zizmor.yml .
+        results_file="/tmp/zizmor-results.${{ inputs.results_format }}"
+        uvx zizmor --format=${{ inputs.results_format }} --config=zizmor.yml . > "$results_file" || true
       env:
         GH_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+    - name: Set results file path output
+      id: set_results_file_path_output
+      run: echo "results_file_path=/tmp/zizmor-results.${{ inputs.results_format }}" >> $GITHUB_OUTPUT
       shell: bash
