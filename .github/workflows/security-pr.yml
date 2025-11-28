@@ -25,5 +25,5 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/semgrep-action
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
 

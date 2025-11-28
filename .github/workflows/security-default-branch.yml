@@ -48,7 +48,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/semgrep-action
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
 
   zizmor:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/zizmor-action
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
 
   scorecard:
     runs-on: ubuntu-latest
@@ -66,5 +66,5 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/scorecard-action
+      - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
 
