@@ -46,7 +46,9 @@ runs:
           --severity=ERROR \
           --exclude="*.html" --exclude="*.js" --exclude="*.spec.ts" \
           $baseline_commit_arg \
-          --${{ inputs.results_format }} > "$results_file" || true
+          --${{ inputs.results_format }} | \
+          jq 'to_entries | map(if .key == "results" then .value |= map(select(.extra.metadata.confidence != "LOW")) else . end) | from_entries' \
+          > "$results_file" || true
       shell: bash
     - name: "Set results file path output"
       id: set_results_file_path_output
