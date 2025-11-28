@@ -45,6 +45,8 @@ jobs:
 
   semgrep:
     runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
     steps:
       - uses: actions/checkout@v3
         with:
@@ -54,13 +56,12 @@ jobs:
         id: semgrep
         with:
           show_results_in_pr: false
-          results_format: sarif
+          results_format: json
       - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.semgrep.outputs.results_file_path }}
-          scan_type: SARIF
-          #scan_type: Semgrep JSON Report
+          scan_type: Semgrep JSON Report
           engagement: Semgrep
 
   zizmor:
