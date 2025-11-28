@@ -8,8 +8,8 @@ permissions:
 
 jobs:
   semgrep:
-    # Skip any PR created by dependabot to avoid permission issues:
-    if: (github.actor != 'dependabot[bot]')
+    ## Skip any PR created by dependabot to avoid permission issues:
+    #if: (github.actor != 'dependabot[bot]')
     name: semgrep-oss/scan
     runs-on: ubuntu-latest
     permissions:
@@ -24,47 +24,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: |
-          git clone https://github.com/trailofbits/semgrep-rules $HOME/semgrep-rules-tob
-          git clone https://github.com/semgrep/semgrep-rules $HOME/semgrep-rules
-          git -C $HOME/semgrep-rules reset --hard 518f71b883d431fa33268844b066033507e7c1b5
-          git -C $HOME/semgrep-rules-tob reset --hard 3b91c9b622b4a250b144a832ce73091b1f25e207
-          rm $HOME/semgrep-rules-tob/.github/workflows/update-semgrep-registry.yml
-          rm $HOME/semgrep-rules/.pre-commit-config.yaml
-          rm -rf $HOME/semgrep-rules-tob/.github
-          rm -rf $HOME/semgrep-rules/.github
-          rm -rf $HOME/semgrep-rules/stats
-      - run: git config --global --add safe.directory $(pwd)
-      - run: |
-          semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
-            --metrics=off --experimental \
-            --exclude-rule=third-party-action-not-pinned-to-commit-sha \
-            --exclude-rule=jsx-not-internationalized \
-            --severity=WARNING \
-            --severity=ERROR \
-            --exclude="*.html" --exclude="*.js" \
-            --baseline-commit=${{ github.event.pull_request.base.sha }} \
-            --json > /tmp/semgrep-results.json || true
-      - run: /usr/bin/jq --version
-      - name: Notice
-        shell: bash
-        run: |
-          /usr/bin/jq -r '.results[]
-            | . + {
-                severity: (
-                  if .extra.severity == "WARNING" then "warning"
-                  elif .extra.severity == "ERROR" then "error"
-                  else "notice"
-                  end
-                )
-              }
-            | "::\(.severity) file=\(.path),line=\(.start.line),col=\(.start.col),endLine=\(.end.line),endColumn=\(.end.col),title=\(.check_id)::\((.extra.message
-                | gsub("[^a-zA-Z0-9 .]"; "")
-            ))"' /tmp/semgrep-results.json
-  #    - name: Upload SARIF file
-  #      uses: github/codeql-action/upload-sarif@v2
-  #      with:
-  #        # Path to SARIF file relative to the root of the repository
-  #        sarif_file: /tmp/semgrep-results.sarif
-  #      if: always()
+          persist-credentials: false
+      - uses: ./.github/actions/semgrep-action
 

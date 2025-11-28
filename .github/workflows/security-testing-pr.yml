@@ -11,27 +11,13 @@ jobs:
     name: zizmor
     runs-on: ubuntu-latest
     permissions:
-      security-events: write # needed for SARIF uploads
       contents: read # only needed for private repos
       actions: read # only needed for private repos
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
-
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
-
-      - name: Run zizmor 🌈
-        run: |
-          cat <<EOF > zizmor.yml
-          rules:
-            unpinned-uses:
-              disable: true
-          EOF
-        
-          uvx zizmor --format=github --config=zizmor.yml .
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - uses: ./.github/actions/zizmor-action
+        with: {}

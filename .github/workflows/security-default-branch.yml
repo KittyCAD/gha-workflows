@@ -4,6 +4,8 @@ on:
     secrets:
       DEPENDENCY_TRACK_AUTOMATION_API_KEY:
         required: true
+      GH_TOKEN:
+        required: true
   push:
     branches:
       - main
@@ -16,15 +18,14 @@ permissions:
 jobs:
   sbom-trivy:
     runs-on: ubuntu-latest
-
     container:
       image: aquasec/trivy:0.67.2
-
     steps:
       - run: trivy --version
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          persist-credentials: false
       - run: trivy fs --format cyclonedx --output /tmp/trivy-cyclonedx.json .
       - run: apk --no-cache add curl
       - run: |
@@ -32,7 +33,38 @@ jobs:
                -H 'Content-Type: multipart/form-data' \
                 -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_AUTOMATION_API_KEY }}" \
                -F "autoCreate=true" \
-               -F "projectName=${{ github.repository }}" \
-               -F "projectVersion=${{ github.ref_name }}" \
+               -F "projectName=$PROJECT_NAME" \
+               -F "projectVersion=$PROJECT_VERSION" \
                -F "isLatest=$IS_LATEST" \
                -F "bom=@/tmp/trivy-cyclonedx.json"
+        env:
+          PROJECT_NAME: ${{ github.repository }}
+          PROJECT_VERSION: ${{ github.ref_name }}
+
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/semgrep-action
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/zizmor-action
+
+  scorecard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/scorecard-action
+

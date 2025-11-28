@@ -1,0 +1,19 @@
+name: 'Zizmor Scan'
+description: 'Install uv and run zizmor scan with custom config'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41
+    - name: Run zizmor 🌈
+      run: |
+        cat <<EOF > zizmor.yml
+        rules:
+          unpinned-uses:
+            disable: true
+        EOF
+        uvx zizmor --format=github --config=zizmor.yml .
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+
