@@ -4,7 +4,6 @@ author: 'GitHub Copilot'
 runs:
   using: 'composite'
   steps:
-    - name: Install dependencies
     - name: Run upload script inline
       run: |
         python3 <<EOF
