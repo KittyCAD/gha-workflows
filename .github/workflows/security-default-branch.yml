@@ -9,8 +9,9 @@ on:
 
 name: Security
 
-# No permissions needed if this is being called through `workflow_call`
-#permissions:
+# No special permissions needed if this is being called through `workflow_call`. The calling workflow needs to be configured correctly.
+permissions:
+  contents: read
 
 jobs:
   sbom-trivy:
