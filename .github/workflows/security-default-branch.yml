@@ -6,19 +6,11 @@ on:
         required: true
       DEFECTDOJO_API_TOKEN:
         required: true
-  #     GH_TOKEN:
-  #       required: true
-  push:
-    branches:
-      - main
 
 name: Security
 
-permissions:
-  contents: read
-  issues: read
-  pull-requests: read
-  checks: read
+# No permissions needed if this is being called through `workflow_call`
+#permissions:
 
 jobs:
   sbom-trivy:
