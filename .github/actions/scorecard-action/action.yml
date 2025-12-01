@@ -19,7 +19,6 @@ runs:
         publish_results: false
       env:
         GH_TOKEN: ${{ inputs.gh_token }}
-        GITHUB_REF: refs/heads/main
     - name: "Set SARIF file path output"
       id: set_sarif_file_path_output
       run: echo "sarif_file_path=${{ github.workspace }}/results.sarif" >> $GITHUB_OUTPUT
