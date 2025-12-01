@@ -16,6 +16,9 @@ name: Security
 
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
+  checks: read
 
 jobs:
   sbom-trivy:
