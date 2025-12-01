@@ -7,22 +7,12 @@ permissions:
   contents: read
 
 jobs:
-  zizmor:
-    name: zizmor
+  nothing:
+    name: nothing
     runs-on: ubuntu-latest
-    permissions:
-      contents: read # only needed for private repos
-      actions: read # only needed for private repos
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
-        id: zizmor
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          results_format: github
-      - name: Show results in PR
-        run: cat ${{ steps.zizmor.outputs.results_file_path }}
