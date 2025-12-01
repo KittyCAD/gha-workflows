@@ -50,7 +50,7 @@ runs:
       id: set_results_file_path_output
       run: echo "results_file_path=/tmp/semgrep-results.json" >> $GITHUB_OUTPUT
       shell: bash
-    - name: "Show results in PR"
+    - name: Show results in PR
       if: ${{ inputs.show_results_in_pr == 'true' }}
       run: |
         /usr/bin/jq -r '.results[]
