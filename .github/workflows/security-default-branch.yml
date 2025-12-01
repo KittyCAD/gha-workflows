@@ -88,9 +88,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        #with:
-          #fetch-depth: 0
-          #persist-credentials: false
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: main
       - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
         id: scorecard
         with:
@@ -102,3 +103,5 @@ jobs:
           report_path: ${{ steps.scorecard.outputs.results_file_path }}
           scan_type: SARIF
           engagement: Scorecard
+        env:
+          GITHUB_REF: refs/heads/main
