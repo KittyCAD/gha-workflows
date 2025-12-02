@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main
         with:
           show_results_in_pr: true
 
@@ -35,7 +35,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main
         id: zizmor
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
