@@ -48,12 +48,12 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@security
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main
         id: semgrep
         with:
           show_results_in_pr: false
           results_format: json
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.semgrep.outputs.results_file_path }}
@@ -67,12 +67,12 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@security
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main
         id: zizmor
         with:
           results_format: sarif
           gh_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.zizmor.outputs.results_file_path }}
@@ -92,11 +92,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@security
+      - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@main
         id: scorecard
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@security
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.scorecard.outputs.results_file_path }}
