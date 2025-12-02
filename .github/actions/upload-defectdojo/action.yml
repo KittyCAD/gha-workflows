@@ -1,0 +1,77 @@
+name: 'Upload results to DefectDojo'
+description: 'Uploads a scan report to DefectDojo, creating the product if needed.'
+author: 'GitHub Copilot'
+runs:
+  using: 'composite'
+  steps:
+    - name: Run upload script inline
+      run: |
+        python3 <<EOF
+        import os
+        import sys
+        import requests
+        
+        def main():
+            base_url = 'https://defectdojo-api.corp.zoo.dev'
+            dd_token = os.environ['INPUT_DD_TOKEN']
+            repo_name = os.environ['GITHUB_REPOSITORY'].split('/')[-1]
+            report_path = os.environ['INPUT_REPORT_PATH']
+            scan_type = os.environ['INPUT_SCAN_TYPE']
+            engagement = os.environ['INPUT_ENGAGEMENT']
+        
+            # Search for product
+            params = {'name_exact': repo_name}
+            url = f'{base_url}/api/v2/products/'
+            headers = {'Authorization': f'Token {dd_token}'}
+            resp = requests.get(url, params=params, headers=headers)
+            if not resp.ok:
+                print(f'Failed to search for product: {resp.status_code} {resp.text}')
+                sys.exit(1)
+            products = resp.json()
+            results = products.get('results', [])
+            if len(results) > 1:
+                print(f'Found multiple products for repository {repo_name}. Please ensure the product name is unique.')
+                sys.exit(1)
+            elif len(results) == 0:
+                print(f'No product found for repository {repo_name}. Please create the product in DefectDojo first.')
+                sys.exit(1)
+        
+            # Upload scan
+            upload_url = f'{base_url}/api/v2/reimport-scan/'
+            data = {
+                'product_name': repo_name,
+                'engagement_name': engagement,
+                'scan_type': scan_type,
+                'auto_create_context': 'True',
+            }
+            with open(report_path, 'rb') as f:
+                files = {'file': (os.path.basename(report_path), f, 'application/octet-stream')}
+                resp = requests.post(upload_url, data=data, files=files, headers=headers)
+            if not resp.ok:
+                print(f'Failed to reimport scan: {resp.status_code} {resp.text}')
+                sys.exit(1)
+            print(resp.text)
+        
+        if __name__ == '__main__':
+            main()
+        EOF
+      env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        INPUT_DD_TOKEN: ${{ inputs.dd_token }}
+        INPUT_REPORT_PATH: ${{ inputs.report_path }}
+        INPUT_SCAN_TYPE: ${{ inputs.scan_type }}
+        INPUT_ENGAGEMENT: ${{ inputs.engagement }}
+      shell: bash
+inputs:
+  dd_token:
+    description: 'DefectDojo API token'
+    required: true
+  report_path:
+    description: 'Path to the report file to upload'
+    required: true
+  scan_type:
+    description: 'Scan type for DefectDojo'
+    required: true
+  engagement:
+    description: 'Engagement name in DefectDojo'
+    required: true

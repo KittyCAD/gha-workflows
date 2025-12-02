@@ -1,0 +1,18 @@
+on:
+  pull_request:
+
+name: Security (PR) (Testing)
+
+permissions:
+  contents: read
+
+jobs:
+  nothing:
+    name: nothing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false

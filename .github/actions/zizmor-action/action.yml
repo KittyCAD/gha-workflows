@@ -1,0 +1,35 @@
+name: 'Zizmor Scan'
+description: 'Install uv and run zizmor scan with custom config'
+inputs:
+  gh_token:
+    description: 'GitHub token for authentication'
+    required: true
+  results_format:
+    description: 'Format of the results file (github, json, sarif)'
+    required: false
+    default: 'github'
+outputs:
+  results_file_path:
+    description: 'Absolute path to the Zizmor results file'
+    value: ${{ steps.set_results_file_path_output.outputs.results_file_path }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41
+    - name: Run zizmor 🌈
+      run: |
+        cat <<EOF > zizmor.yml
+        rules:
+          unpinned-uses:
+            disable: true
+        EOF
+        results_file="/tmp/zizmor-results.${{ inputs.results_format }}"
+        uvx zizmor --format=${{ inputs.results_format }} --config=zizmor.yml . > "$results_file" || true
+      env:
+        GH_TOKEN: ${{ inputs.gh_token }}
+      shell: bash
+    - name: Set results file path output
+      id: set_results_file_path_output
+      run: echo "results_file_path=/tmp/zizmor-results.${{ inputs.results_format }}" >> $GITHUB_OUTPUT
+      shell: bash
