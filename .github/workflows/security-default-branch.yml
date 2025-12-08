@@ -79,26 +79,3 @@ jobs:
           scan_type: SARIF
           engagement: Zizmor
 
-  scorecard:
-    if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: read
-      pull-requests: read
-      checks: read
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/scorecard-action@main
-        id: scorecard
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
-        with:
-          dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
-          report_path: ${{ steps.scorecard.outputs.results_file_path }}
-          scan_type: SARIF
-          engagement: Scorecard
