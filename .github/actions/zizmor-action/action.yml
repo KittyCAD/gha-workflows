@@ -25,7 +25,7 @@ runs:
             disable: true
         EOF
         results_file="/tmp/zizmor-results.${{ inputs.results_format }}"
-        uvx zizmor --format=${{ inputs.results_format }} --config=zizmor.yml . > "$results_file" || true
+        uvx zizmor --format=${{ inputs.results_format }} --offline --config=zizmor.yml . > "$results_file" || true
       env:
         GH_TOKEN: ${{ inputs.gh_token }}
       shell: bash
