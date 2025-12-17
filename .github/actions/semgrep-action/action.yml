@@ -31,7 +31,7 @@ runs:
       run: |
         results_file="/tmp/semgrep-results.json"
         baseline_commit_arg=""
-        if [ "${{ inputs.show_results_in_pr }}" = "true" ]; then
+        if [ "$SHOW_RESULTS_IN_PR" = "true" ]; then
           baseline_commit_arg="--baseline-commit=${{ github.event.pull_request.base.sha }}"
         fi
         semgrep scan --config $HOME/semgrep-rules --config $HOME/semgrep-rules-tob \
@@ -46,6 +46,8 @@ runs:
           jq 'to_entries | map(if .key == "results" then .value |= map(select(.extra.metadata.confidence != "LOW")) else . end) | from_entries' \
           > "$results_file" || true
       shell: bash
+      env:
+        SHOW_RESULTS_IN_PR: ${{ inputs.show_results_in_pr }}
     - name: "Set results file path output"
       id: set_results_file_path_output
       run: echo "results_file_path=/tmp/semgrep-results.json" >> $GITHUB_OUTPUT
