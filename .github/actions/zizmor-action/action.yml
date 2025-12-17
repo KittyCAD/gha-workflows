@@ -32,7 +32,7 @@ runs:
       shell: bash
     - name: Set results file path output
       id: set_results_file_path_output
-      run: echo "results_file_path=/tmp/zizmor-results.$$RESULTS_FORMAT" >> $GITHUB_OUTPUT
+      run: echo "results_file_path=/tmp/zizmor-results.$RESULTS_FORMAT" >> $GITHUB_OUTPUT
       shell: bash
       env:
         RESULTS_FORMAT: ${{ inputs.results_format }}
