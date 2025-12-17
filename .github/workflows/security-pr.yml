@@ -13,13 +13,13 @@ jobs:
     name: semgrep-oss/scan
     runs-on: ubuntu-latest
     container:
-      image: semgrep/semgrep
+      image: semgrep/semgrep:1.145.2
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main # zizmor: ignore[unpinned-uses]
         with:
           show_results_in_pr: true
 
@@ -35,10 +35,12 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main # zizmor: ignore[unpinned-uses]
         id: zizmor
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           results_format: github
       - name: Show results in PR
-        run: cat ${{ steps.zizmor.outputs.results_file_path }}
+        run: cat "$RESULTS_FILE_PATH"
+        env:
+          RESULTS_FILE_PATH: ${{ steps.zizmor.outputs.results_file_path }}

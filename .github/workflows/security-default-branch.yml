@@ -29,7 +29,7 @@ jobs:
       - run: |
           curl -X "POST" "https://dependency-track-sbom.corp.zoo.dev/api/v1/bom" \
                -H 'Content-Type: multipart/form-data' \
-                -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_AUTOMATION_API_KEY }}" \
+                -H "X-Api-Key: $DEPENDENCY_TRACK_AUTOMATION_API_KEY" \
                -F "autoCreate=true" \
                -F "projectName=$PROJECT_NAME" \
                -F "projectVersion=$PROJECT_VERSION" \
@@ -38,22 +38,23 @@ jobs:
         env:
           PROJECT_NAME: ${{ github.repository }}
           PROJECT_VERSION: ${{ github.ref_name }}
+          DEPENDENCY_TRACK_AUTOMATION_API_KEY: ${{ secrets.DEPENDENCY_TRACK_AUTOMATION_API_KEY }}
 
   semgrep:
     runs-on: ubuntu-latest
     container:
-      image: semgrep/semgrep
+      image: semgrep/semgrep:1.145.2
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main
+      - uses: KittyCAD/gha-workflows/.github/actions/semgrep-action@main # zizmor: ignore[unpinned-uses]
         id: semgrep
         with:
           show_results_in_pr: false
           results_format: json
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main # zizmor: ignore[unpinned-uses]
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.semgrep.outputs.results_file_path }}
@@ -67,12 +68,12 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main
+      - uses: KittyCAD/gha-workflows/.github/actions/zizmor-action@main # zizmor: ignore[unpinned-uses]
         id: zizmor
         with:
           results_format: sarif
           gh_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main
+      - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main # zizmor: ignore[unpinned-uses]
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.zizmor.outputs.results_file_path }}

@@ -24,12 +24,15 @@ runs:
           unpinned-uses:
             disable: true
         EOF
-        results_file="/tmp/zizmor-results.${{ inputs.results_format }}"
-        uvx zizmor --format=${{ inputs.results_format }} --config=zizmor.yml . > "$results_file" || true
+        results_file="/tmp/zizmor-results.$RESULTS_FORMAT"
+        uvx zizmor --format="$RESULTS_FORMAT" --offline --config=zizmor.yml . > "$results_file" || true
       env:
+        RESULTS_FORMAT: ${{ inputs.results_format }}
         GH_TOKEN: ${{ inputs.gh_token }}
       shell: bash
     - name: Set results file path output
       id: set_results_file_path_output
-      run: echo "results_file_path=/tmp/zizmor-results.${{ inputs.results_format }}" >> $GITHUB_OUTPUT
+      run: echo "results_file_path=/tmp/zizmor-results.$RESULTS_FORMAT" >> $GITHUB_OUTPUT
       shell: bash
+      env:
+        RESULTS_FORMAT: ${{ inputs.results_format }}
