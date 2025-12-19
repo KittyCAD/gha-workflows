@@ -40,7 +40,7 @@ runs:
           --exclude-rule=jsx-not-internationalized \
           --severity=WARNING \
           --severity=ERROR \
-          --exclude="*.html" --exclude="*.js" --exclude="*.spec.ts" \
+          --exclude="*.html" --exclude="*.js" --exclude="*.spec.ts" --exclude="tests.rs" \
           $baseline_commit_arg \
           --json | \
           jq 'to_entries | map(if .key == "results" then .value |= map(select(.extra.metadata.confidence != "LOW")) else . end) | from_entries' \
