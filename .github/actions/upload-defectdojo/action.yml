@@ -15,6 +15,7 @@ runs:
             base_url = 'https://defectdojo-api.corp.zoo.dev'
             dd_token = os.environ['INPUT_DD_TOKEN']
             repo_name = os.environ['GITHUB_REPOSITORY'].split('/')[-1]
+            repo_url = 'https://github.com/' + os.environ['GITHUB_REPOSITORY']
             report_path = os.environ['INPUT_REPORT_PATH']
             scan_type = os.environ['INPUT_SCAN_TYPE']
             engagement = os.environ['INPUT_ENGAGEMENT']
@@ -42,6 +43,7 @@ runs:
                 'product_name': repo_name,
                 'engagement_name': engagement,
                 'scan_type': scan_type,
+                'source_code_management_uri': repo_url,
                 'auto_create_context': 'True',
             }
             with open(report_path, 'rb') as f:
