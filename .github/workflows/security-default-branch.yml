@@ -54,6 +54,13 @@ jobs:
         with:
           show_results_in_pr: false
           results_format: json
+      - name: Retain Semgrep report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: semgrep-results-${{ github.run_attempt }}
+          path: ${{ steps.semgrep.outputs.results_file_path }}
+          if-no-files-found: error
+          retention-days: 30
       - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main # zizmor: ignore[unpinned-uses]
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
@@ -73,10 +80,16 @@ jobs:
         with:
           results_format: sarif
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Retain Zizmor report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: zizmor-results-${{ github.run_attempt }}
+          path: ${{ steps.zizmor.outputs.results_file_path }}
+          if-no-files-found: error
+          retention-days: 30
       - uses: KittyCAD/gha-workflows/.github/actions/upload-defectdojo@main # zizmor: ignore[unpinned-uses]
         with:
           dd_token: ${{ secrets.DEFECTDOJO_API_TOKEN }}
           report_path: ${{ steps.zizmor.outputs.results_file_path }}
           scan_type: SARIF
           engagement: Zizmor
-
